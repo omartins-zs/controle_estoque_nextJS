@@ -1,0 +1,50 @@
+Sistema de Controle de Estoque com Next.JS
+
+https://chakra-ui.com/
+
+https://nextjs.org/
+
+https://fonts.google.com/specimen/Poppins
+
+Esse nao funcionou
+yarn create next-app ./
+
+funcionou
+yarn create next-app
+yarn add @chakra-ui/react @emotion/react @emotion/styled framer-motion react-icons
+yarn dev
+
+Add Chakra, Emotion React, Styled e React Icons
+
+import { ChakraProvider } from "@chakra-ui/react";
+import { SidebarProvider } from "../contexts/SidebarContext";
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <ChakraProvider>
+      <SidebarProvider>
+        <Component {...pageProps} />
+      </SidebarProvider>
+    </ChakraProvider>
+  );
+}
+
+export default MyApp;
+
+
+
+export default function Home() {
+return <h1>Hello World</h1>
+}
+
+
+module.exports = {
+    // Outras configurações do Next.js
+    devIndicators: {
+        autoPrerender: false, // Desabilitar pré-renderização automática
+    },
+    productionBrowserSourceMaps: true, // Habilitar source maps para melhor rastreamento de erros
+};
+
+
+
