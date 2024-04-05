@@ -1,3 +1,4 @@
+"use client"
 import {
   Box,
   Button,
@@ -13,31 +14,32 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import { Entry, Product } from "@/types";
 
 const StockEntries = () => {
   const [amount, setAmount] = useState("");
   const [product_id, setProduct_id] = useState("0");
-  const [listStockEntries, setStockEntries] = useState([]);
-  const [listProducts, setListProducts] = useState([]);
+  const [listStockEntries, setStockEntries] = useState<Entry[]>([]);
+  const [listProducts, setListProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const db_stock_entries = localStorage.getItem("db_stock_entries")
-      ? JSON.parse(localStorage.getItem("db_stock_entries"))
+      ? JSON.parse(localStorage.getItem("db_stock_entries")!)
       : [];
 
     setStockEntries(db_stock_entries);
 
     const db_products = localStorage.getItem("db_products")
-      ? JSON.parse(localStorage.getItem("db_products"))
+      ? JSON.parse(localStorage.getItem("db_products")!)
       : [];
 
     setListProducts(db_products);
   }, []);
 
   const handleNewEntry = () => {
-    if (!amount | (product_id === "0")) {
+    if (!amount || (product_id === "0")) {
       return alert("Selecione o produto e a quantidade!");
     }
 
@@ -46,33 +48,33 @@ const StockEntries = () => {
     if (listStockEntries && listStockEntries.length) {
       localStorage.setItem(
         "db_stock_entries",
-        JSON.stringify([...listStockEntries, { id, amount, product_id }])
+        JSON.stringify([...listStockEntries, {  id, amount: Number(amount), product_id }])
       );
 
-      setStockEntries([...listStockEntries, { id, amount, product_id }]);
+      setStockEntries([...listStockEntries, {  id, amount: Number(amount), product_id }]);
     } else {
       localStorage.setItem(
         "db_stock_entries",
-        JSON.stringify([{ id, amount, product_id }])
+        JSON.stringify([{  id, amount: Number(amount), product_id }])
       );
 
-      setStockEntries([{ id, amount, product_id }]);
+      setStockEntries([{  id, amount: Number(amount), product_id }]);
     }
 
     setAmount("");
     setProduct_id("0");
   };
 
-  const removeEntries = (id) => {
-    const newArray = listStockEntries.filter((item) => item.id !== id);
+  const removeEntries = (id: string) => {
+    const newArray = listStockEntries.filter((item) => item.product_id !== id);
 
     localStorage.setItem("db_stock_entries", JSON.stringify(newArray));
 
     setStockEntries(newArray);
   };
 
-  const getProductById = (id) => {
-    return listProducts.filter((item) => item.id === id)[0]?.name;
+  const getProductById = (id: string) => {
+    return listProducts.filter((item) => item.product_id === id)[0]?.product_name || 'teste';
   };
 
   return (
@@ -92,8 +94,8 @@ const StockEntries = () => {
               {listProducts &&
                 listProducts.length > 0 &&
                 listProducts.map((item, i) => (
-                  <option key={i} value={item.id}>
-                    {item.name}
+                  <option key={i} value={item.product_id}>
+                    {item.product_name}
                   </option>
                 ))}
             </Select>
@@ -133,7 +135,7 @@ const StockEntries = () => {
                         fontSize={11}
                         color="red.500"
                         fontWeight="bold"
-                        onClick={() => removeEntries(item.id)}
+                        onClick={() => removeEntries(item.product_id)}
                       >
                         DELETAR
                       </Button>
