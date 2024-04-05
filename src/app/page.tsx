@@ -1,113 +1,148 @@
-import Image from 'next/image'
 
-export default function Home() {
+"use client"
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Input,
+  SimpleGrid,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import { Product } from "@/types";
+
+
+const Produtos = () => {
+  const [name, setName] = useState("");
+  const [listProducts, setListProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const db_products = localStorage.getItem("db_products")
+      ? JSON.parse(localStorage.getItem("db_products")!)
+      : [];
+
+    setListProducts(db_products);
+  }, []);
+
+  const handleNewProduct = () => {
+    if (!name) return;
+    if (verifyProductName()) {
+      alert("Produto já cadastrado!");
+      return;
+    }
+
+    const id = Math.random().toString(36).substring(2);
+
+    if (listProducts && listProducts.length) {
+      localStorage.setItem(
+        "db_products",
+        JSON.stringify([...listProducts, { product_id: id, product_name: name }])
+      );
+
+      setListProducts([...listProducts, { product_id: id, product_name: name }]);
+    } else {
+      localStorage.setItem("db_products", JSON.stringify([{ product_id: id, product_name: name }]));
+
+      setListProducts([{ product_id: id, product_name: name }]);
+    }
+
+    setName("");
+  };
+
+  const verifyProductName = () => {
+    return !!listProducts.find((prod) => prod.product_name === name);
+  };
+
+  const removeProduct = (id: string) => {
+    const db_stock_outputs = (localStorage.getItem("db_stock_outputs")
+      ? JSON.parse(localStorage.getItem("db_stock_outputs")!)
+      : []) as Product[];
+
+    const db_stock_entries = (localStorage.getItem("db_stock_entries")
+      ? JSON.parse(localStorage.getItem("db_stock_entries")!)
+      : []) as Product[];
+
+    const hasOutputs = db_stock_outputs.filter(
+      (item) => item.product_id === id
+    ).length;
+    const hasEntries = db_stock_entries.filter(
+      (item) => item.product_id === id
+    ).length;
+
+    if (hasEntries || hasOutputs) {
+      alert("Esse produto possuí movimentações!");
+      return;
+    }
+
+    const newArray = listProducts.filter((prod) => prod.product_id !== id);
+
+    localStorage.setItem("db_products", JSON.stringify(newArray));
+
+    setListProducts(newArray);
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+    <Flex h="100vh" flexDirection="column">
+      <Header />
+
+      <Flex w="100%" my="6" maxW={1120} mx="auto" px="6" h="100vh">
+        <Sidebar />
+
+        <Box w="100%">
+          <SimpleGrid minChildWidth={240} h="fit-content" spacing="6">
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nome do produto"
             />
-          </a>
-        </div>
-      </div>
+            <Button w="40" onClick={handleNewProduct}>
+              CADASTRAR
+            </Button>
+          </SimpleGrid>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+          <Box overflowY="auto" height="80vh">
+            <Table mt="6">
+              <Thead>
+                <Tr>
+                  <Th fontWeight="bold" fontSize="14px">
+                    Nome
+                  </Th>
+                  <Th></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {listProducts.map((item, i) => (
+                  <Tr key={i}>
+                    <Td color="">{item.product_name}</Td>
+                    <Td textAlign="end">
+                      <Button
+                        p="2"
+                        h="auto"
+                        fontSize={11}
+                        color="red.500"
+                        fontWeight="bold"
+                        onClick={() => removeProduct(item.product_id)}
+                      >
+                        DELETAR
+                      </Button>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </Box>
+        </Box>
+      </Flex>
+    </Flex>
+  );
+};
+export default Produtos;
