@@ -1,3 +1,4 @@
+"use client"
 import {
   Box,
   Button,
@@ -13,45 +14,46 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import { Product } from "@/types";
 
 const Balance = () => {
-  const [listProducts, setListProducts] = useState([]);
+  const [listProducts, setListProducts] = useState<Product[]>([]);
   const [productFiltered, setProductFiltered] = useState("");
-  const [cmbProducts, setCmbProducts] = useState([]);
+  const [cmbProducts, setCmbProducts] = useState<Product[]>([]);
 
   const BuildBalanceArray = () => {
-    const db_stock_outputs = localStorage.getItem("db_stock_outputs")
-      ? JSON.parse(localStorage.getItem("db_stock_outputs"))
-      : [];
+    const db_stock_outputs = (localStorage.getItem("db_stock_outputs")
+      ? JSON.parse(localStorage.getItem("db_stock_outputs")!)
+      : []) as Product[];
 
-    const db_stock_entries = localStorage.getItem("db_stock_entries")
-      ? JSON.parse(localStorage.getItem("db_stock_entries"))
-      : [];
+    const db_stock_entries = (localStorage.getItem("db_stock_entries")
+      ? JSON.parse(localStorage.getItem("db_stock_entries")!)
+      : []) as Product[];
 
-    const db_products = localStorage.getItem("db_products")
-      ? JSON.parse(localStorage.getItem("db_products"))
-      : [];
+    const db_products = (localStorage.getItem("db_products")
+      ? JSON.parse(localStorage.getItem("db_products")!)
+      : []) as Product[];
 
-    const newArray = [];
+    const newArray: Product[] = [];
 
     db_products.map((prod) => {
       const entries = db_stock_entries
-        .filter((item) => item.product_id === prod.id)
+        .filter((item) => item.product_id === prod.product_id)
         .map((entry) => Number(entry.amount))
         .reduce((acc, cur) => acc + cur, 0);
 
       const outputs = db_stock_outputs
-        .filter((item) => item.product_id === prod.id)
+        .filter((item) => item.product_id === prod.product_id)
         .map((entry) => Number(entry.amount))
         .reduce((acc, cur) => acc + cur, 0);
 
       const total = Number(entries) - Number(outputs);
 
       newArray.push({
-        product_id: prod.id,
-        product_name: prod.name,
+        product_id: prod.product_id,
+        product_name: prod.product_name,
         amount: total,
       });
 
