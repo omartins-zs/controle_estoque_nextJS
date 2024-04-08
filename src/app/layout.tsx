@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Roboto as Font } from "next/font/google";
+import font from "@/config/fonts";
 import { ChakraProvider } from "@chakra-ui/react";
 import { SidebarProvider } from "../contexts/SidebarContext";
 import "./globals.css";
-
-const font = Font({ subsets: ["latin"], weight: ["100", "300", "400", "500", "700", "900"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
