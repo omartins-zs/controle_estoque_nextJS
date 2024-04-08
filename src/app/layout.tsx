@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import font from "@/config/fonts";
+import { fontMerriweather as font } from "@/config/fonts"; // Renomeie a importação para 'font'
 import { ChakraProvider } from "@chakra-ui/react";
 import { SidebarProvider } from "../contexts/SidebarContext";
 import "./globals.css";
