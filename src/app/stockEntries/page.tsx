@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Entry, Product } from "@/types";
+import { getProductById } from "@/utils/utils";
 
 const StockEntries = () => {
   const [amount, setAmount] = useState("");
@@ -48,17 +49,17 @@ const StockEntries = () => {
     if (listStockEntries && listStockEntries.length) {
       localStorage.setItem(
         "db_stock_entries",
-        JSON.stringify([...listStockEntries, {  id, amount: Number(amount), product_id }])
+        JSON.stringify([...listStockEntries, { id, amount: Number(amount), product_id }])
       );
 
-      setStockEntries([...listStockEntries, {  id, amount: Number(amount), product_id }]);
+      setStockEntries([...listStockEntries, { id, amount: Number(amount), product_id }]);
     } else {
       localStorage.setItem(
         "db_stock_entries",
-        JSON.stringify([{  id, amount: Number(amount), product_id }])
+        JSON.stringify([{ id, amount: Number(amount), product_id }])
       );
 
-      setStockEntries([{  id, amount: Number(amount), product_id }]);
+      setStockEntries([{ id, amount: Number(amount), product_id }]);
     }
 
     setAmount("");
@@ -73,9 +74,6 @@ const StockEntries = () => {
     setStockEntries(newArray);
   };
 
-  const getProductById = (id: string) => {
-    return listProducts.filter((item) => item.product_id === id)[0]?.product_name || 'teste';
-  };
 
   return (
     <Flex h="100vh" flexDirection="column">
@@ -105,7 +103,7 @@ const StockEntries = () => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-            <Button w="40" onClick={handleNewEntry}>
+            <Button colorScheme='linkedin' w="40" onClick={handleNewEntry}>
               SALVAR
             </Button>
           </SimpleGrid>
@@ -126,8 +124,8 @@ const StockEntries = () => {
               <Tbody>
                 {listStockEntries.map((item, i) => (
                   <Tr key={i}>
-                    <Td color="gray.500">{getProductById(item.product_id)}</Td>
-                    <Td color="gray.500">{item.amount}</Td>
+                    <Td color="gray.500">{getProductById(item.product_id, listProducts)}</Td>
+                    <Td color="green.300">{item.amount}</Td>
                     <Td textAlign="end">
                       <Button
                         p="2"

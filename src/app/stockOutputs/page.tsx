@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Entry, Product } from "@/types";
+import { getProductById } from "@/utils/utils";
 
 const StockOutputs = () => {
   const [amount, setAmount] = useState("");
@@ -74,10 +75,6 @@ const StockOutputs = () => {
     setStockOutputs(newArray);
   };
 
-  const getProductById = (id: string) => {
-    return listProducts.filter((item) => item.product_id === id)[0]?.product_name || 'teste';
-  };
-
   return (
     <Flex h="100vh" flexDirection="column">
       <Header />
@@ -106,7 +103,7 @@ const StockOutputs = () => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-            <Button w="40" onClick={handleNewOutput}>
+            <Button colorScheme='linkedin' w="40" onClick={handleNewOutput}>
               SALVAR
             </Button>
           </SimpleGrid>
@@ -127,8 +124,8 @@ const StockOutputs = () => {
               <Tbody>
                 {listStockOutputs.map((item, i) => (
                   <Tr key={i}>
-                    <Td color="gray.500">{getProductById(item.product_id)}</Td>
-                    <Td color="gray.500">{item.amount}</Td>
+                    <Td color="gray.500">{getProductById(item.product_id, listProducts)}</Td>
+                    <Td color="red.300">{item.amount}</Td>
                     <Td textAlign="end">
                       <Button
                         p="2"
