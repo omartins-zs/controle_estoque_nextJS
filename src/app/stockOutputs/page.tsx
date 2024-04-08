@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Entry, Product } from "@/types";
-import { getProductById, removeItemById } from "@/utils/utils";
+import { getProductById, removeItemById, setItemInLocalStorage, getItemFromLocalStorage } from "@/utils/utils";
 
 const StockOutputs = () => {
   const [amount, setAmount] = useState("");
@@ -26,17 +26,10 @@ const StockOutputs = () => {
   const [listProducts, setListProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const db_stock_outputs = localStorage.getItem("db_stock_outputs")
-      ? JSON.parse(localStorage.getItem("db_stock_outputs")!)
-      : [];
-    console.log(listStockOutputs, localStorage.getItem("db_stock_outputs"));
-
+    const db_stock_outputs = getItemFromLocalStorage<Entry[]>("db_stock_outputs") || [];
     setStockOutputs(db_stock_outputs);
 
-    const db_products = localStorage.getItem("db_products")
-      ? JSON.parse(localStorage.getItem("db_products")!)
-      : [];
-
+    const db_products = getItemFromLocalStorage<Product[]>("db_products") || [];
     setListProducts(db_products);
   }, []);
 
@@ -47,21 +40,12 @@ const StockOutputs = () => {
 
     const id = Math.random().toString(36).substring(2);
 
-    if (listStockOutputs && listStockOutputs.length) {
-      localStorage.setItem(
-        "db_stock_outputs",
-        JSON.stringify([...listStockOutputs, { id, amount: Number(amount), product_id }])
-      );
+    const newOutput = { id, amount: Number(amount), product_id };
 
-      setStockOutputs([...listStockOutputs, { id, amount: Number(amount), product_id }]);
-    } else {
-      localStorage.setItem(
-        "db_stock_outputs",
-        JSON.stringify([{ id, amount: Number(amount), product_id }])
-      );
+    const updatedOutputs = [...listStockOutputs, newOutput];
 
-      setStockOutputs([{ id, amount: Number(amount), product_id }]);
-    }
+    setItemInLocalStorage("db_stock_outputs", updatedOutputs);
+    setStockOutputs(updatedOutputs);
 
     setAmount("");
     setProduct_id("0");

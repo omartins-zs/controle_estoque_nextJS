@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Entry, Product } from "@/types";
-import { getProductById, removeItemById } from "@/utils/utils";
+import { getProductById, removeItemById, setItemInLocalStorage, getItemFromLocalStorage } from "@/utils/utils";
 
 const StockEntries = () => {
   const [amount, setAmount] = useState("");
@@ -26,16 +26,10 @@ const StockEntries = () => {
   const [listProducts, setListProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const db_stock_entries = localStorage.getItem("db_stock_entries")
-      ? JSON.parse(localStorage.getItem("db_stock_entries")!)
-      : [];
-
+    const db_stock_entries = getItemFromLocalStorage<Entry[]>("db_stock_entries") || [];
     setStockEntries(db_stock_entries);
 
-    const db_products = localStorage.getItem("db_products")
-      ? JSON.parse(localStorage.getItem("db_products")!)
-      : [];
-
+    const db_products = getItemFromLocalStorage<Product[]>("db_products") || [];
     setListProducts(db_products);
   }, []);
 
@@ -46,41 +40,16 @@ const StockEntries = () => {
 
     const id = Math.random().toString(36).substring(2);
 
-    if (listStockEntries && listStockEntries.length) {
-      localStorage.setItem(
-        "db_stock_entries",
-        JSON.stringify([...listStockEntries, { id, amount: Number(amount), product_id }])
-      );
+    const newEntry = { id, amount: Number(amount), product_id };
 
-      setStockEntries([...listStockEntries, { id, amount: Number(amount), product_id }]);
-    } else {
-      localStorage.setItem(
-        "db_stock_entries",
-        JSON.stringify([{ id, amount: Number(amount), product_id }])
-      );
+    const updatedEntries = [...listStockEntries, newEntry];
 
-      setStockEntries([{ id, amount: Number(amount), product_id }]);
-    }
+    setItemInLocalStorage("db_stock_entries", updatedEntries);
+    setStockEntries(updatedEntries);
 
     setAmount("");
     setProduct_id("0");
   };
-
-  //  Function Antiga para excluir apenas 1 Registro - 100% Funcionando
-  // const removeEntries = (id: string) => {
-  //   console.log("ID do item a ser removido:", id);
-
-  //   const newArray = listStockEntries.filter((item) => {
-  //     console.log("ID do item atual:", item.id);
-  //     return item.id !== id;
-  //   });
-
-  //   console.log("Nova lista de entradas de estoque:", newArray);
-
-  //   localStorage.setItem("db_stock_entries", JSON.stringify(newArray));
-
-  //   setStockEntries(newArray);
-  // };
 
   const removeItemId = (id: string) => {
     removeItemById(listStockEntries, id, "db_stock_entries", setStockEntries);

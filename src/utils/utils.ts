@@ -16,3 +16,11 @@ export const removeItemById = <T extends { id: string }>(
 
     setList(newArray);
   };
+  export const setItemInLocalStorage = <T>(key: string, value: T): void => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  export const getItemFromLocalStorage = <T>(key: string): T | null => {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : null;
+  };
