@@ -1,15 +1,6 @@
+<h2 align="center">Sistema de Controle de Estoque com Next.JS
+</h2>
 
-
-<h1 align="center">Sistema de Controle de Estoque com Next.JS
-</h1>
-
- <div align="center">
-
-
-Foi desenvolvida uma API REST em .NET completa do zero,
-com diversos endpoints
-
-</div>
 
   <p align="center">
 
@@ -19,22 +10,19 @@ com diversos endpoints
 
   </p>
 
+<h4 align="center"> Sistema de Controle de Estoque com Next.JS 🔎🗄️👨‍💻
 
+ <br>
 
-<h4 align="center">
-   ✅ Sistema de Controle de Estoque com Next.JS
-
- 🔎👨‍💻 Andamento✅
+🚧 Andamento🚧
 
  </h4>
 
+[Chakra UI](https://chakra-ui.com/)
 
-https://chakra-ui.com/
+[Next.js](https://nextjs.org/)
 
-https://nextjs.org/
-
-https://fonts.google.com/specimen/Poppins
-
+[Poppins - Google Fonts](https://fonts.google.com/specimen/Poppins)
 
 ## Melhorias a fazer:
 
@@ -49,17 +37,17 @@ https://fonts.google.com/specimen/Poppins
 
 </details>
 
+
+
 <details>
-  <summary>Projeto Antigo Next.JS 12
-</summary>
-* Download do Projeto Antigo Next JS 12 [Clique aqui](https://github.com/omartins-zs/controle_estoque_nextJS/tree/d93638fb8506cbbe3ed253b4dd3688bf1b50bd78)
+  <summary>Projeto Antigo Next.JS 12</summary>
 
-Download das Libs
-    * Node.JS 17 (https://nodejs.org/dist/v17.9.1/node-v17.9.1-x64.msi)
-    * ```bash npx create-next-app@12 my-next-app ```
-
+  - Download do Projeto Antigo Next JS 12 [Clique aqui](https://github.com/omartins-zs/controle_estoque_nextJS/tree/d93638fb8506cbbe3ed253b4dd3688bf1b50bd7)
+  - [Node.JS 17](https://nodejs.org/dist/v17.9.1/node-v17.9.1-x64.msi)
+  - ```
+    npx create-next-app@12 controle_estoque_nextjs
+    ```
 </details>
-
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
