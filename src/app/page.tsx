@@ -104,7 +104,7 @@ const Produtos = () => {
               onChange={(e) => setName(e.target.value)}
               placeholder="Nome do produto"
             />
-            <Button w="40" onClick={handleNewProduct}>
+            <Button colorScheme='whatsapp' w="40" onClick={handleNewProduct}>
               CADASTRAR
             </Button>
           </SimpleGrid>
@@ -125,10 +125,10 @@ const Produtos = () => {
                     <Td color="">{item.product_name}</Td>
                     <Td textAlign="end">
                       <Button
+                        colorScheme='red'
                         p="2"
                         h="auto"
                         fontSize={11}
-                        color="red.500"
                         fontWeight="bold"
                         onClick={() => removeProduct(item.product_id)}
                       >
