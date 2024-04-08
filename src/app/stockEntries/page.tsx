@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Entry, Product } from "@/types";
-import { getProductById } from "@/utils/utils";
+import { getProductById, removeItemById } from "@/utils/utils";
 
 const StockEntries = () => {
   const [amount, setAmount] = useState("");
@@ -66,12 +66,24 @@ const StockEntries = () => {
     setProduct_id("0");
   };
 
-  const removeEntries = (id: string) => {
-    const newArray = listStockEntries.filter((item) => item.product_id !== id);
+  //  Function Antiga para excluir apenas 1 Registro - 100% Funcionando
+  // const removeEntries = (id: string) => {
+  //   console.log("ID do item a ser removido:", id);
 
-    localStorage.setItem("db_stock_entries", JSON.stringify(newArray));
+  //   const newArray = listStockEntries.filter((item) => {
+  //     console.log("ID do item atual:", item.id);
+  //     return item.id !== id;
+  //   });
 
-    setStockEntries(newArray);
+  //   console.log("Nova lista de entradas de estoque:", newArray);
+
+  //   localStorage.setItem("db_stock_entries", JSON.stringify(newArray));
+
+  //   setStockEntries(newArray);
+  // };
+
+  const removeItemId = (id: string) => {
+    removeItemById(listStockEntries, id, setStockEntries);
   };
 
 
@@ -133,7 +145,7 @@ const StockEntries = () => {
                         fontSize={11}
                         color="red.500"
                         fontWeight="bold"
-                        onClick={() => removeEntries(item.product_id)}
+                        onClick={() => removeItemId(item.id)}
                       >
                         DELETAR
                       </Button>
