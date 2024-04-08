@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Entry, Product } from "@/types";
-import { getProductById } from "@/utils/utils";
+import { getProductById, removeItemById } from "@/utils/utils";
 
 const StockOutputs = () => {
   const [amount, setAmount] = useState("");
@@ -67,12 +67,8 @@ const StockOutputs = () => {
     setProduct_id("0");
   };
 
-  const removeOutput = (id: string) => {
-    const newArray = listStockOutputs.filter((item) => item.product_id !== id);
-
-    localStorage.setItem("db_stock_outputs", JSON.stringify(newArray));
-
-    setStockOutputs(newArray);
+  const removeItemId = (id: string) => {
+    removeItemById(listStockOutputs, id, "db_stock_outputs", setStockOutputs);
   };
 
   return (
@@ -133,7 +129,7 @@ const StockOutputs = () => {
                         fontSize={11}
                         color="red.500"
                         fontWeight="bold"
-                        onClick={() => removeOutput(item.product_id)}
+                        onClick={() => removeItemId(item.id)}
                       >
                         DELETAR
                       </Button>

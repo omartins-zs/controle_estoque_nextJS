@@ -83,7 +83,7 @@ const StockEntries = () => {
   // };
 
   const removeItemId = (id: string) => {
-    removeItemById(listStockEntries, id, setStockEntries);
+    removeItemById(listStockEntries, id, "db_stock_entries", setStockEntries);
   };
 
 
